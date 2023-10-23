@@ -7,7 +7,18 @@
           placeholder="Type username..."
           @search="search = $event"
         />
+        <!-- buttons  -->
         <button class="btn btnPrimary" @click="getRepos">Search</button>
+        <!-- wrapper  -->
+        <div class="repos__wrapper" v-if="repos">
+          <!-- item  -->
+          <div class="repos-item" v-for="repo in repos" :key="repo.id">
+            <div class="repos-info">
+              <a class="link" target="_blank" :href="repo.html_url">{{ repo.name }}</a>
+              <span>{{ repo.stargazers_count}} ⭐</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -22,18 +33,23 @@ export default {
   data() {
     return {
       search: "",
+      repos: null,
     };
   },
   methods: {
     getRepos() {
       // console.log(this.search)
-      axios.get(`https://api.github.com/users/${this.search}/repos`).then((res) => {
-        console.log(res.data);
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
-  }
+      axios
+        .get(`https://api.github.com/users/${this.search}/repos`)
+        .then((res) => {
+          console.log(res.data);
+          this.repos = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
 };
 </script>
 
